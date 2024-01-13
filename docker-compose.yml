@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+
+  mysql:
+    build: "./mysql"
+    container_name: mysql-mbit
+    restart: always
+    env_file:
+      - variables_entorno.env
+    networks:
+      - network_app
+    ports:
+      - 3306:3306
+    volumes:
+      - db-data:/var/lib/mysql/
+
+  app:
+    build: "./python"
+    container_name: flask-mbit
+    networks:
+      - network_app
+    ports: 
+      - 80:80
+    volumes:
+      - images-data:/home/resources/images/
+    depends_on:
+      - mysql
+
+
+volumes:
+  db-data:
+  images-data:
+
+networks:
+  network_app:
+    name: network_app_internal
